@@ -13,8 +13,8 @@ StudyChamp solves this by combining four essential tools into one sleek, gamifie
 By adding a gamified XP system, visual statistics tracking (via Chart.js), and celebratory confetti, it keeps studying engaging and keeps everything confined to a single browser tab.
 
 ## Demo
-*(Note: Replace with your live demo link, e.g., GitHub Pages URL, or a video demo)*
-[Live Demo](https://amit-dulariya.github.io/study_champ/)
+
+https://amit-dulariya.github.io/study_champ/
 
 ## Code
 {% github amit-dulariya/study_champ %}
