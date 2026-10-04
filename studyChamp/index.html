@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyChamp</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1><i class="fa-solid fa-graduation-cap"></i> StudyChamp</h1>
+            <nav>
+                <button class="nav-btn active" data-target="pomodoro"><i class="fa-solid fa-clock"></i> Pomodoro</button>
+                <button class="nav-btn" data-target="flashcards"><i class="fa-solid fa-clone"></i> Flashcards</button>
+                <button class="nav-btn" data-target="quiz"><i class="fa-solid fa-clipboard-question"></i> Quiz</button>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Pomodoro Section -->
+            <section id="pomodoro" class="tab-content active">
+                <div class="glass-panel text-center">
+                    <h2>Pomodoro Timer</h2>
+                    <div class="timer-display" id="timer-display">25:00</div>
+                    <div class="timer-mode" id="timer-mode">Focus Time</div>
+                    <div class="timer-controls">
+                        <button id="start-btn" class="btn primary-btn"><i class="fa-solid fa-play"></i> Start</button>
+                        <button id="pause-btn" class="btn secondary-btn hidden"><i class="fa-solid fa-pause"></i> Pause</button>
+                        <button id="reset-btn" class="btn outline-btn"><i class="fa-solid fa-rotate-right"></i> Reset</button>
+                    </div>
+                    <div class="timer-settings">
+                        <button id="focus-mode-btn" class="mode-btn active">Focus (25m)</button>
+                        <button id="short-break-btn" class="mode-btn">Short Break (5m)</button>
+                        <button id="long-break-btn" class="mode-btn">Long Break (15m)</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Flashcards Section -->
+            <section id="flashcards" class="tab-content">
+                <div class="glass-panel">
+                    <h2>Flashcards</h2>
+                    
+                    <div class="flashcard-creator">
+                        <h3>Create New Card</h3>
+                        <input type="text" id="fc-question" placeholder="Question / Front">
+                        <input type="text" id="fc-answer" placeholder="Answer / Back">
+                        <button id="add-fc-btn" class="btn primary-btn">Add Card</button>
+                    </div>
+
+                    <div class="flashcard-viewer hidden" id="fc-viewer">
+                        <div class="flashcard-container">
+                            <div class="flashcard" id="active-flashcard">
+                                <div class="front" id="fc-front">Question</div>
+                                <div class="back" id="fc-back">Answer</div>
+                            </div>
+                        </div>
+                        <div class="fc-controls">
+                            <button id="fc-prev-btn" class="icon-btn"><i class="fa-solid fa-chevron-left"></i></button>
+                            <span id="fc-counter">1 / 1</span>
+                            <button id="fc-next-btn" class="icon-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                        <button id="delete-fc-btn" class="btn danger-btn mt-4">Delete Card</button>
+                    </div>
+                    
+                    <div id="fc-empty-state" class="empty-state">
+                        <i class="fa-regular fa-folder-open"></i>
+                        <p>No flashcards yet. Create some above!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quiz Section -->
+            <section id="quiz" class="tab-content">
+                <div class="glass-panel">
+                    <h2>Quiz Master</h2>
+                    
+                    <div class="quiz-tabs">
+                        <button class="quiz-tab-btn active" data-qtarget="create-quiz">Create Quiz</button>
+                        <button class="quiz-tab-btn" data-qtarget="take-quiz">Take Quiz</button>
+                    </div>
+
+                    <div id="create-quiz" class="q-tab-content active">
+                        <div class="quiz-creator">
+                            <input type="text" id="quiz-question" placeholder="Quiz Question">
+                            <input type="text" id="quiz-opt1" placeholder="Option 1 (Correct Answer)" class="correct-input">
+                            <input type="text" id="quiz-opt2" placeholder="Option 2">
+                            <input type="text" id="quiz-opt3" placeholder="Option 3 (Optional)">
+                            <input type="text" id="quiz-opt4" placeholder="Option 4 (Optional)">
+                            <button id="add-quiz-btn" class="btn primary-btn">Add Question</button>
+                        </div>
+                        <div id="quiz-list-preview" class="mt-4">
+                            <!-- Preview of added questions -->
+                        </div>
+                    </div>
+
+                    <div id="take-quiz" class="q-tab-content hidden">
+                        <div id="quiz-active-state" class="hidden">
+                            <h3 id="active-q-text">Question Text</h3>
+                            <div class="quiz-options" id="active-q-options">
+                                <!-- Options injected here -->
+                            </div>
+                            <button id="submit-q-btn" class="btn primary-btn mt-4" disabled>Submit Answer</button>
+                            <div id="q-feedback" class="mt-2 hidden"></div>
+                            <button id="next-q-btn" class="btn secondary-btn mt-4 hidden">Next Question</button>
+                        </div>
+                        
+                        <div id="quiz-result-state" class="hidden text-center">
+                            <h3>Quiz Complete!</h3>
+                            <div class="score-display" id="quiz-score">0 / 0</div>
+                            <button id="restart-quiz-btn" class="btn primary-btn mt-4">Restart Quiz</button>
+                        </div>
+
+                        <div id="quiz-empty-state" class="empty-state">
+                            <i class="fa-solid fa-clipboard-list"></i>
+                            <p>No quiz questions added yet. Go to 'Create Quiz' to add some!</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
