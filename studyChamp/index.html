@@ -1,129 +1,295 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyChamp</title>
+    <title>StudyChamp - The Ultimate Study Companion</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome for icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <header>
-            <h1><i class="fa-solid fa-graduation-cap"></i> StudyChamp</h1>
-            <nav>
-                <button class="nav-btn active" data-target="pomodoro"><i class="fa-solid fa-clock"></i> Pomodoro</button>
-                <button class="nav-btn" data-target="flashcards"><i class="fa-solid fa-clone"></i> Flashcards</button>
-                <button class="nav-btn" data-target="quiz"><i class="fa-solid fa-clipboard-question"></i> Quiz</button>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h2>StudyChamp</h2>
+            </div>
+            
+            <nav class="side-nav">
+                <button class="nav-btn active" data-target="dashboard"><i class="fa-solid fa-chart-pie"></i> <span>Dashboard</span></button>
+                <button class="nav-btn" data-target="pomodoro"><i class="fa-solid fa-clock"></i> <span>Pomodoro</span></button>
+                <button class="nav-btn" data-target="tasks"><i class="fa-solid fa-list-check"></i> <span>Tasks</span></button>
+                <button class="nav-btn" data-target="flashcards"><i class="fa-solid fa-layer-group"></i> <span>Flashcards</span></button>
+                <button class="nav-btn" data-target="quiz"><i class="fa-solid fa-brain"></i> <span>Quiz</span></button>
+                <button class="nav-btn" data-target="settings"><i class="fa-solid fa-gear"></i> <span>Settings</span></button>
             </nav>
-        </header>
-
-        <main>
-            <!-- Pomodoro Section -->
-            <section id="pomodoro" class="tab-content active">
-                <div class="glass-panel text-center">
-                    <h2>Pomodoro Timer</h2>
-                    <div class="timer-display" id="timer-display">25:00</div>
-                    <div class="timer-mode" id="timer-mode">Focus Time</div>
-                    <div class="timer-controls">
-                        <button id="start-btn" class="btn primary-btn"><i class="fa-solid fa-play"></i> Start</button>
-                        <button id="pause-btn" class="btn secondary-btn hidden"><i class="fa-solid fa-pause"></i> Pause</button>
-                        <button id="reset-btn" class="btn outline-btn"><i class="fa-solid fa-rotate-right"></i> Reset</button>
-                    </div>
-                    <div class="timer-settings">
-                        <button id="focus-mode-btn" class="mode-btn active">Focus (25m)</button>
-                        <button id="short-break-btn" class="mode-btn">Short Break (5m)</button>
-                        <button id="long-break-btn" class="mode-btn">Long Break (15m)</button>
-                    </div>
+            
+            <div class="sidebar-footer">
+                <div class="level-indicator">
+                    <span>Level <span id="user-level">1</span></span>
+                    <div class="xp-bar-bg"><div class="xp-bar-fill" id="xp-bar"></div></div>
                 </div>
-            </section>
+            </div>
+        </aside>
 
-            <!-- Flashcards Section -->
-            <section id="flashcards" class="tab-content">
-                <div class="glass-panel">
-                    <h2>Flashcards</h2>
-                    
-                    <div class="flashcard-creator">
-                        <h3>Create New Card</h3>
-                        <input type="text" id="fc-question" placeholder="Question / Front">
-                        <input type="text" id="fc-answer" placeholder="Answer / Back">
-                        <button id="add-fc-btn" class="btn primary-btn">Add Card</button>
-                    </div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <h1 id="page-title">Dashboard</h1>
+                <div class="header-actions">
+                    <button class="icon-btn theme-toggle" id="theme-toggle" title="Toggle Theme"><i class="fa-solid fa-moon"></i></button>
+                    <button class="icon-btn" id="notify-request-btn" title="Enable Notifications"><i class="fa-regular fa-bell"></i></button>
+                </div>
+            </header>
 
-                    <div class="flashcard-viewer hidden" id="fc-viewer">
-                        <div class="flashcard-container">
-                            <div class="flashcard" id="active-flashcard">
-                                <div class="front" id="fc-front">Question</div>
-                                <div class="back" id="fc-back">Answer</div>
+            <div class="content-wrapper">
+                <!-- Dashboard -->
+                <section id="dashboard" class="tab-content active">
+                    <div class="grid-dashboard">
+                        <div class="stat-card">
+                            <div class="stat-icon focus"><i class="fa-solid fa-fire"></i></div>
+                            <div class="stat-details">
+                                <h3>Focus Time</h3>
+                                <p id="stat-focus-time">0h 0m</p>
                             </div>
                         </div>
-                        <div class="fc-controls">
-                            <button id="fc-prev-btn" class="icon-btn"><i class="fa-solid fa-chevron-left"></i></button>
-                            <span id="fc-counter">1 / 1</span>
-                            <button id="fc-next-btn" class="icon-btn"><i class="fa-solid fa-chevron-right"></i></button>
-                        </div>
-                        <button id="delete-fc-btn" class="btn danger-btn mt-4">Delete Card</button>
-                    </div>
-                    
-                    <div id="fc-empty-state" class="empty-state">
-                        <i class="fa-regular fa-folder-open"></i>
-                        <p>No flashcards yet. Create some above!</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Quiz Section -->
-            <section id="quiz" class="tab-content">
-                <div class="glass-panel">
-                    <h2>Quiz Master</h2>
-                    
-                    <div class="quiz-tabs">
-                        <button class="quiz-tab-btn active" data-qtarget="create-quiz">Create Quiz</button>
-                        <button class="quiz-tab-btn" data-qtarget="take-quiz">Take Quiz</button>
-                    </div>
-
-                    <div id="create-quiz" class="q-tab-content active">
-                        <div class="quiz-creator">
-                            <input type="text" id="quiz-question" placeholder="Quiz Question">
-                            <input type="text" id="quiz-opt1" placeholder="Option 1 (Correct Answer)" class="correct-input">
-                            <input type="text" id="quiz-opt2" placeholder="Option 2">
-                            <input type="text" id="quiz-opt3" placeholder="Option 3 (Optional)">
-                            <input type="text" id="quiz-opt4" placeholder="Option 4 (Optional)">
-                            <button id="add-quiz-btn" class="btn primary-btn">Add Question</button>
-                        </div>
-                        <div id="quiz-list-preview" class="mt-4">
-                            <!-- Preview of added questions -->
-                        </div>
-                    </div>
-
-                    <div id="take-quiz" class="q-tab-content hidden">
-                        <div id="quiz-active-state" class="hidden">
-                            <h3 id="active-q-text">Question Text</h3>
-                            <div class="quiz-options" id="active-q-options">
-                                <!-- Options injected here -->
+                        <div class="stat-card">
+                            <div class="stat-icon tasks"><i class="fa-solid fa-check-double"></i></div>
+                            <div class="stat-details">
+                                <h3>Tasks Done</h3>
+                                <p id="stat-tasks-done">0</p>
                             </div>
-                            <button id="submit-q-btn" class="btn primary-btn mt-4" disabled>Submit Answer</button>
-                            <div id="q-feedback" class="mt-2 hidden"></div>
-                            <button id="next-q-btn" class="btn secondary-btn mt-4 hidden">Next Question</button>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon cards"><i class="fa-solid fa-clone"></i></div>
+                            <div class="stat-details">
+                                <h3>Cards Mastered</h3>
+                                <p id="stat-cards-mastered">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon quiz"><i class="fa-solid fa-medal"></i></div>
+                            <div class="stat-details">
+                                <h3>Avg Quiz Score</h3>
+                                <p id="stat-quiz-score">0%</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-charts mt-6">
+                        <div class="glass-panel chart-container">
+                            <h3>Focus History (Last 7 Days)</h3>
+                            <canvas id="focusChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Pomodoro -->
+                <section id="pomodoro" class="tab-content">
+                    <div class="pomodoro-layout">
+                        <div class="glass-panel timer-container text-center">
+                            <div class="timer-ring">
+                                <svg class="progress-ring" width="300" height="300">
+                                    <circle class="progress-ring__circle_bg" stroke="rgba(255,255,255,0.1)" stroke-width="8" fill="transparent" r="140" cx="150" cy="150"/>
+                                    <circle class="progress-ring__circle" stroke="var(--primary-color)" stroke-width="8" fill="transparent" r="140" cx="150" cy="150"/>
+                                </svg>
+                                <div class="timer-display-wrap">
+                                    <div class="timer-display" id="timer-display">25:00</div>
+                                    <div class="timer-mode" id="timer-mode">Focus Time</div>
+                                </div>
+                            </div>
+                            
+                            <div class="timer-controls mt-6">
+                                <button id="start-btn" class="btn primary-btn btn-lg"><i class="fa-solid fa-play"></i> Start</button>
+                                <button id="pause-btn" class="btn secondary-btn btn-lg hidden"><i class="fa-solid fa-pause"></i> Pause</button>
+                                <button id="reset-btn" class="btn outline-btn btn-lg"><i class="fa-solid fa-rotate-right"></i> Reset</button>
+                            </div>
+                            
+                            <div class="timer-settings mt-6">
+                                <button id="focus-mode-btn" class="mode-btn active">Focus (25m)</button>
+                                <button id="short-break-btn" class="mode-btn">Short Break (5m)</button>
+                                <button id="long-break-btn" class="mode-btn">Long Break (15m)</button>
+                            </div>
                         </div>
                         
-                        <div id="quiz-result-state" class="hidden text-center">
-                            <h3>Quiz Complete!</h3>
-                            <div class="score-display" id="quiz-score">0 / 0</div>
-                            <button id="restart-quiz-btn" class="btn primary-btn mt-4">Restart Quiz</button>
-                        </div>
-
-                        <div id="quiz-empty-state" class="empty-state">
-                            <i class="fa-solid fa-clipboard-list"></i>
-                            <p>No quiz questions added yet. Go to 'Create Quiz' to add some!</p>
+                        <div class="glass-panel current-task-container">
+                            <h3>Active Task</h3>
+                            <div class="active-task-display" id="active-task-display">
+                                <p class="text-muted">No task selected. Select one from the Tasks tab.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
+
+                <!-- Tasks -->
+                <section id="tasks" class="tab-content">
+                    <div class="glass-panel">
+                        <div class="task-input-group">
+                            <input type="text" id="task-input" placeholder="What needs to be done?">
+                            <button id="add-task-btn" class="btn primary-btn"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                        <div class="task-filters mt-4">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="active">Active</button>
+                            <button class="filter-btn" data-filter="completed">Completed</button>
+                        </div>
+                        <ul class="task-list mt-4" id="task-list">
+                            <!-- Tasks injected here -->
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Flashcards -->
+                <section id="flashcards" class="tab-content">
+                    <div class="flashcard-layout">
+                        <div class="glass-panel">
+                            <h3>Create / Manage Cards</h3>
+                            <div class="flashcard-creator mt-4">
+                                <input type="text" id="fc-question" placeholder="Question (Front)">
+                                <textarea id="fc-answer" placeholder="Answer (Back)"></textarea>
+                                <button id="add-fc-btn" class="btn primary-btn w-100">Add Card</button>
+                            </div>
+                            <div class="fc-list mt-4" id="fc-list">
+                                <!-- List of cards for quick edit/delete -->
+                            </div>
+                        </div>
+
+                        <div class="glass-panel flex-center-col">
+                            <h3>Study Mode</h3>
+                            <div class="flashcard-viewer hidden w-100" id="fc-viewer">
+                                <div class="flashcard-container">
+                                    <div class="flashcard" id="active-flashcard">
+                                        <div class="front" id="fc-front">Question</div>
+                                        <div class="back" id="fc-back">Answer</div>
+                                    </div>
+                                </div>
+                                <div class="fc-controls mt-4">
+                                    <button id="fc-prev-btn" class="icon-btn"><i class="fa-solid fa-arrow-left"></i></button>
+                                    <span id="fc-counter" class="badge">1 / 1</span>
+                                    <button id="fc-next-btn" class="icon-btn"><i class="fa-solid fa-arrow-right"></i></button>
+                                </div>
+                                <div class="study-actions mt-4 text-center">
+                                    <button class="btn danger-btn fc-rate-btn" data-val="hard">Hard</button>
+                                    <button class="btn secondary-btn fc-rate-btn" data-val="good">Good</button>
+                                    <button class="btn primary-btn fc-rate-btn" data-val="easy">Easy</button>
+                                </div>
+                            </div>
+                            <div id="fc-empty-state" class="empty-state">
+                                <div class="empty-icon"><i class="fa-regular fa-folder-open"></i></div>
+                                <p>No flashcards yet. Create some to start studying!</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Quiz -->
+                <section id="quiz" class="tab-content">
+                    <div class="glass-panel">
+                        <div class="tabs-header">
+                            <button class="tab-btn active" data-qtarget="create-quiz">Quiz Builder</button>
+                            <button class="tab-btn" data-qtarget="take-quiz">Take Quiz</button>
+                        </div>
+
+                        <div id="create-quiz" class="sub-tab-content active mt-4">
+                            <div class="quiz-creator">
+                                <input type="text" id="quiz-question" placeholder="Enter your question here">
+                                <div class="grid-2 mt-4">
+                                    <div class="input-with-icon">
+                                        <i class="fa-solid fa-check text-success"></i>
+                                        <input type="text" id="quiz-opt1" placeholder="Correct Option" class="border-success">
+                                    </div>
+                                    <div class="input-with-icon">
+                                        <i class="fa-solid fa-xmark text-danger"></i>
+                                        <input type="text" id="quiz-opt2" placeholder="Wrong Option 1">
+                                    </div>
+                                    <div class="input-with-icon">
+                                        <i class="fa-solid fa-xmark text-danger"></i>
+                                        <input type="text" id="quiz-opt3" placeholder="Wrong Option 2 (Optional)">
+                                    </div>
+                                    <div class="input-with-icon">
+                                        <i class="fa-solid fa-xmark text-danger"></i>
+                                        <input type="text" id="quiz-opt4" placeholder="Wrong Option 3 (Optional)">
+                                    </div>
+                                </div>
+                                <button id="add-quiz-btn" class="btn primary-btn mt-4">Save Question</button>
+                            </div>
+                            <div id="quiz-list-preview" class="mt-6">
+                                <!-- Preview -->
+                            </div>
+                        </div>
+
+                        <div id="take-quiz" class="sub-tab-content hidden mt-4">
+                            <div id="quiz-active-state" class="hidden">
+                                <div class="quiz-progress">
+                                    <div class="progress-bar-fill" id="quiz-progress-fill"></div>
+                                </div>
+                                <h3 id="active-q-text" class="mt-6 quiz-q-text">Question Text</h3>
+                                <div class="quiz-options mt-6" id="active-q-options">
+                                    <!-- Options -->
+                                </div>
+                                <div class="action-footer mt-6 flex-between">
+                                    <div id="q-feedback" class="feedback-badge hidden"></div>
+                                    <button id="submit-q-btn" class="btn primary-btn" disabled>Submit</button>
+                                    <button id="next-q-btn" class="btn secondary-btn hidden">Next</button>
+                                </div>
+                            </div>
+                            
+                            <div id="quiz-result-state" class="hidden text-center py-6">
+                                <div class="trophy-icon"><i class="fa-solid fa-trophy"></i></div>
+                                <h2 class="mt-4">Quiz Completed!</h2>
+                                <div class="score-display mt-2" id="quiz-score">0%</div>
+                                <p class="text-muted mt-2" id="quiz-msg">Great job!</p>
+                                <button id="restart-quiz-btn" class="btn primary-btn mt-6">Try Again</button>
+                            </div>
+
+                            <div id="quiz-empty-state" class="empty-state">
+                                <div class="empty-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+                                <p>Your quiz bank is empty. Build a quiz first!</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Settings -->
+                <section id="settings" class="tab-content">
+                    <div class="glass-panel max-w-md mx-auto">
+                        <div class="settings-group">
+                            <h3>Audio & Notifications</h3>
+                            <div class="setting-item flex-between mt-4">
+                                <span>Sound Effects</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="setting-sound" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item flex-between mt-4">
+                                <span>Desktop Notifications</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="setting-notify">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <hr class="divider">
+                        <div class="settings-group">
+                            <h3>Data Management</h3>
+                            <button id="clear-data-btn" class="btn danger-btn w-100 mt-4"><i class="fa-solid fa-trash"></i> Reset All Data</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </main>
     </div>
+    
+    <!-- Audio Elements -->
+    <audio id="sound-success" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
+    <audio id="sound-error" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3" preload="auto"></audio>
+    <audio id="sound-timer" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+    
     <script src="app.js"></script>
 </body>
 </html>
